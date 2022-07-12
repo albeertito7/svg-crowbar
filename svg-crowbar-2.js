@@ -41,7 +41,7 @@ const crowbar = (function(_deps) {
   function _initialize() {
     //console.log("initialize");
 
-    let documents = [window.document],
+    let documents = [window.document], // creating array with the first element being the document itself
         SVGSources = [],
         iframes = document.querySelectorAll("iframe"), // getting all iframes
         objects = document.querySelectorAll("object"); // getting all objects
@@ -49,7 +49,7 @@ const crowbar = (function(_deps) {
     // retrieve the Svg Style
     let emptySvgDeclarationComputed = _getEmtpySvgStyle();
 
-    // for each document iframe
+    // for each document iframe, push to the documents array
     [].forEach.call(iframes, function(el) {
       try {
         if (el.contentDocument) {
