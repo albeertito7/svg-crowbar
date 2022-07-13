@@ -342,3 +342,6 @@ const crowbar = (function(_deps) {
   }
 
 }(crowbar_deps));
+
+// run
+crowbar.initialize();
