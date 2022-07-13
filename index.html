@@ -2,80 +2,16 @@
 <head>
   <meta charset='utf-8'>
   <title>SVG Crowbar</title>
-  <link rel="stylesheet" type="text/css" href="assets/linked.css">
-
-  <style>
-
-    /* Testing */
-    @import url("assets/imported.css");
-
-    svg {
-      border: solid 1px #ddd;
-    }
-
-    .internal {
-      fill: #f0f;
-    }
-
-    #svgs .dependency {
-      fill: #f0f;
-    }
-
-    svg text {
-      text-anchor: middle;
-      font-size: 16px;
-      font-family: Helvetica;
-    }
-
-    /* Page Styles */
-    body {
-      font-family: "Helvetica Neue", Helvetica, Arial;
-      width: 600px;
-      margin: 40px auto;
-      font-size: 15px;
-      line-height: 1.4em;
-    }
-
-    h3 {
-      font-size: 18px;
-      border-top: solid 1px #ddd;
-      padding: 20px 0 0 0;
-      margin: 20px 0 0 0;
-    }
-
-    p {
-      color: #333;
-    }
-
-    .note {
-      color: #999;
-    }
-
-    .bookmarklet {
-      padding: 3px 8px;
-      font-size: 12px;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 1em;
-      background: #666;
-      color: white;
-    }
-
-    .bookmarklet.ver2 {
-      background: #3FAA90;
-    }
-
-    #svgs {
-      margin: 20px 0;
-    }
-
-  </style>
+  <link rel="stylesheet" type="text/css" href="css/styles.css">
 
 </head>
 
 <body>
 
-  <a href="https://github.com/albeertito7/svg-crowbar"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+  <!-- Fork me on Github badge -->
+  <a href="https://github.com/albeerito7/svg-crowbar"><img style="position: absolute; top: 0; right: 0; border: 0; -moz-user-select: none; -webkit-user-select: none; user-select: none;" loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
+
+  <!--<a href="https://github.com/albeertito7/svg-crowbar"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>-->
 
   <h1>SVG Crowbar</h1>
   
@@ -86,8 +22,8 @@
   <h3>The Bookmarklet</h3>
   
   <p>
-    <a class="bookmarklet" href="javascript:javascript: (function () { var e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar-2.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();">SVG Crowbar 2</a>
-    <span>Drag this to your bookmarks bar.</span>
+    <a class="bookmarklet" href="javascript:javascript: (function () { var e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar-2.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); })();">SVG Crowbar</a>
+    <span>→ Drag this to your bookmarks bar.</span>
   <p>
 
   <p>After you’ve installed the bookmarklet, you can execute it on any page. Go ahead and try it out on this <a href="http://bl.ocks.org/mbostock/4458497">crazy map</a>.</p>
@@ -105,64 +41,10 @@
   <p>Adobe Illustrator also chokes on fonts that it doesn’t recognize. Font-family assigments like “sans-serif” (or if you're using webfonts like “nyt-franklin”) will cause Illustrator to give this error when opening the file: “The operation cannot complete because of an unknown error. [CANT]”. This is fixed in Illustrator version 17.1. Other SVG viewers are pretty okay with them though.</p>
   <p>Some styles won’t propogate down if they depend on markup outside of the svg element. For instance, if you use CSS that targets an SVG path element by an id on the div surrounding the SVG ("#map svg path") then those styles won’t show up in the resulting file. </p>
 
-  <h3>A Sample SVG</h3>
-  <div id="svgs"></div>
+  <h3>A Sample SVG for testing purposes.</h3>
 
-  <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script>
-    
-    var width = 600,
-        height = 300;
-
-    var svg = d3.select("#svgs").append("svg")
-       .attr("class", "first")
-       .attr("width", width)
-       .attr("height", height);
-
-    svg.selectAll("circle")
-      .data(d3.range(20))
-      .enter().append("circle")
-        .attr("cx", width / 2)
-        .attr("cy", height / 2)
-        .attr("r", function(d) { return d * 20; })
-        .style("fill", "#0ff")
-        .style("fill-opacity", 0.01)
-        .style("stroke", "#0ff");
-
-    svg.selectAll(".bead")
-      .data(d3.range(600))
-      .enter().append("circle")
-        .attr("class", "bead")
-        .attr("cx", function(d) { return (d % 20) * (width / 19); })
-        .attr("cy", function(d) { return Math.floor(d / 20) * (height / 29); })
-        .attr("r", function(d) { return Math.random() * 10; })
-        .style("fill", "#0ff")
-        .style("fill-opacity", 0.4);
-
-    svg.append("text")
-        .attr("class", "internal")
-        .attr("x", width / 2)
-        .attr("y", height / 5)
-        .text("Internal CSS, this text should be pink.");
-
-    svg.append("text")
-        .attr("class", "imported")
-        .attr("x", width / 2)
-        .attr("y", height / 5 * 2)
-        .text("Imported CSS, this text should be pink.");
-
-    svg.append("text")
-        .attr("class", "linked")
-        .attr("x", width / 2)
-        .attr("y", height / 5 * 3)
-        .text("Linked CSS, this text should be pink.");
-
-    svg.append("text")
-        .attr("class", "dependency")
-        .attr("x", width / 2)
-        .attr("y", height / 5 * 4)
-        .text("An HTML dependency, this text should be pink.");
-
-  </script>
+  <div id="svg-sample">
+    <object data="assets/sample-logo.svg" width="300" height="300"> </object>
+  </div>
 
 </body>
