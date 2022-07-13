@@ -71,8 +71,10 @@ const crowbar = (function(_deps) {
       }
     });
 
+    // for each documents
     documents.forEach(function(doc) {
       
+      //
       let newSources = getSources(doc, emptySvgDeclarationComputed);
 
       // because of prototype on NYT pages
@@ -82,6 +84,7 @@ const crowbar = (function(_deps) {
 
     });
 
+    // creating the popOvers, or download if only one SVG source
     if (SVGSources.length > 1) {
       createPopover(SVGSources);
     } 
@@ -186,9 +189,10 @@ const crowbar = (function(_deps) {
   function getSources(doc, emptySvgDeclarationComputed) {
     //console.log("getSources");
 
-    var svgInfo = [],
-        svgs = doc.querySelectorAll("svg");
+    let svgInfo = [],
+        svgs = doc.querySelectorAll("svg"); // returns a static NodeList representing a list of the document's elements that match the specified group of selectors
 
+    // for each SVG of the document (doc)
     [].forEach.call(svgs, function (svg) {
 
       svg.setAttribute("version", "1.1");
@@ -208,8 +212,9 @@ const crowbar = (function(_deps) {
 
       setInlineStyles(svg, emptySvgDeclarationComputed);
 
-      var source = (new XMLSerializer()).serializeToString(svg);
-      var rect = svg.getBoundingClientRect();
+      let source = (new XMLSerializer()).serializeToString(svg);
+      let rect = svg.getBoundingClientRect();
+
       svgInfo.push({
         top: rect.top,
         left: rect.left,
@@ -221,7 +226,9 @@ const crowbar = (function(_deps) {
         childElementCount: svg.childElementCount,
         source: [ _doctype + source ]
       });
+
     });
+
     return svgInfo;
   }
 
@@ -231,7 +238,7 @@ const crowbar = (function(_deps) {
   function download(source) {
     //console.log("download");
 
-    var filename = "untitled";
+    let filename = "untitled";
 
     if (source.name) {
       filename = source.name;
@@ -243,9 +250,9 @@ const crowbar = (function(_deps) {
       filename = window.document.title.replace(/[^a-z0-9]/gi, '-').toLowerCase();
     }
 
-    var url = window.URL.createObjectURL(new Blob(source.source, { "type" : "text\/xml" }));
+    let url = window.URL.createObjectURL(new Blob(source.source, { "type" : "text\/xml" }));
 
-    var a = document.createElement("a");
+    let a = document.createElement("a");
     document.body.appendChild(a);
     a.setAttribute("class", "svg-crowbar");
     a.setAttribute("download", filename + ".svg");
@@ -264,12 +271,13 @@ const crowbar = (function(_deps) {
   function setInlineStyles(svg, emptySvgDeclarationComputed) {
     //console.log("setInlineStyles");
 
+    //
     function explicitlySetStyle (element) {
-      console.log("explicitlySetStyle");
+      //console.log("explicitlySetStyle");
 
-      var cSSStyleDeclarationComputed = getComputedStyle(element);
-      var i, len, key, value;
-      var computedStyleStr = "";
+      let cSSStyleDeclarationComputed = getComputedStyle(element);
+      let i, len, key, value;
+      let computedStyleStr = "";
       for (i=0, len=cSSStyleDeclarationComputed.length; i<len; i++) {
         key=cSSStyleDeclarationComputed[i];
         value=cSSStyleDeclarationComputed.getPropertyValue(key);
@@ -279,15 +287,17 @@ const crowbar = (function(_deps) {
       }
       element.setAttribute('style', computedStyleStr);
     }
+
+    //
     function traverse(obj) {
       //console.log("traverse");
 
-      var tree = [];
+      let tree = [];
       tree.push(obj);
       visit(obj);
       function visit(node) {
         if (node && node.hasChildNodes()) {
-          var child = node.firstChild;
+          let child = node.firstChild;
           while (child) {
             if (child.nodeType === 1 && child.nodeName != 'SCRIPT'){
               tree.push(child);
@@ -301,10 +311,10 @@ const crowbar = (function(_deps) {
     }
     
     // hardcode computed css styles inside svg
-    var allElements = traverse(svg);
-    var i = allElements.length;
+    let allElements = traverse(svg);
+    let i = allElements.length;
 
-    while (i--){
+    while (i--) {
       explicitlySetStyle(allElements[i]);
     }
   }
