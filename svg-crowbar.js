@@ -1,7 +1,20 @@
 /**
+ * Javascript module pattern: tp wrap a set of variables and functions together in a single scope.
+ * used to define objects and specify the variables and the functions that can be accessed from outside the scope of the function.
+ * expose certain properties and function s as public and can also restrict the scope of some within the object itself, making them private.
+ *
+ * 
+ * NodeList: collections of nodes, usually returned by properties such as Node.childNodes and methods such as document.querySelectorAll().
+ * 
+ * Node: is an abstract base class upon which many other DOM API objects are based, thus letting those object types to be used similary and often interchangeably.
+ * as an abstract class, there is no such thing as a plain Node object.
+ * all objects that implement Node functionality are based on one of its sublaclasses.
+ * most notable are Document, Element, and DocumentFragment.
+ * 
  * 
  */
 
+// Js module dependencies
 const crowbar_deps = {
   _window: window,
   _document: document
@@ -11,9 +24,9 @@ const crowbar = (function(_deps) {
   
   let _doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
       _prefix = {
-        xmlns: "http://www.w3.org/2000/xmlns/",
+        svg: "http://www.w3.org/2000/svg",
         xlink: "http://www.w3.org/1999/xlink",
-        svg: "http://www.w3.org/2000/svg"
+        xmlns: "http://www.w3.org/2000/xmlns/"
       };
     
   window.URL = (window.URL || window.webkitURL);
@@ -34,6 +47,10 @@ const crowbar = (function(_deps) {
     // retrieve the Svg Style
     return getComputedStyle(emptySvg); // window.getComputedStyle
   }
+  
+  // Document: represents any web page loaded in the browser and serves as an entry point into the web page's content, which is the DOM tree.
+  // describes the common properties and methods for any kind of document.
+  // depending on the document's type (e.g. HTML, XML, SVG, ...)
 
   /**
    * 
