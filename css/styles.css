@@ -29,6 +29,11 @@ svg text {
     font-family: Helvetica;
 }
 
+blockquote {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .note {
     color: #999;
 }
