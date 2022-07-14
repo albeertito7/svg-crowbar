@@ -14,6 +14,16 @@
  * 
  */
 
+/**
+ * @link          https://albeertito7.github.com
+ * @since         1.0.0
+ * @module        crowbar
+ * @author        albeertito7 <albertperezdatsira@gmail.com>
+ * @author_uri    https://albeertito7.github.io
+ * @license       MIT
+ * @description
+ */
+
 // Js module dependencies
 const crowbar_deps = {
   _window: window,
@@ -22,6 +32,7 @@ const crowbar_deps = {
 
 const crowbar = (function(_deps) {
   
+  // static properties
   let _doctype = '<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
       _prefix = {
         svg: "http://www.w3.org/2000/svg",
@@ -31,7 +42,6 @@ const crowbar = (function(_deps) {
     
   window.URL = (window.URL || window.webkitURL);
 
-
   /**
    * To get the base SVG Empty Styles from the page browser.
    */
@@ -39,13 +49,10 @@ const crowbar = (function(_deps) {
     
     // create element specifying a namespace URI
     // namespaceURI => a string to associate with the element
-    let emptySvg = window.document.createElementNS( _prefix.svg, 'svg' );
-    
-    // add empty svg element
-    //window.document.body.appendChild(emptySvg);
+    let empty_svg = window.document.createElementNS( _prefix.svg, 'svg' );
     
     // retrieve the Svg Style
-    return getComputedStyle(emptySvg); // window.getComputedStyle
+    return window.getComputedStyle(empty_svg);
   }
   
   // Document: represents any web page loaded in the browser and serves as an entry point into the web page's content, which is the DOM tree.
@@ -56,44 +63,22 @@ const crowbar = (function(_deps) {
    * 
    */
   function _initialize() {
-    //console.log("initialize");
 
-    let documents = [window.document], // creating array with the first element being the document itself
-        SVGSources = [],
-        iframes = document.querySelectorAll("iframe"), // getting all iframes
-        objects = document.querySelectorAll("object"); // getting all objects
-    
-    console.log(objects);
+    let SVGSources = [],
+        iframes = document.querySelectorAll("iframe"),      // getting all iframes
+        objects = document.querySelectorAll("object"),      // getting all objects
+        emptySvgDeclarationComputed = _getEmtpySvgStyle();  // retrieve the Svg Style
 
-    // retrieve the Svg Style
-    let emptySvgDeclarationComputed = _getEmtpySvgStyle();
-
-    // for each document iframe, push to the documents array
-    [].forEach.call(iframes, function(el) {
-      try {
-        if (el.contentDocument) {
-          documents.push(el.contentDocument);
-        }
-      } catch(err) {
-        console.log(err);
+    let documents = [ ...iframes, ...objects ].reduce(function(filtered, element) {
+      if (element.contentDocument) {
+         filtered.push(element.contentDocument);
       }
-    });
-
-    // for each document object
-    [].forEach.call(objects, function(el) {
-      try {
-        if (el.contentDocument) {
-          documents.push(el.contentDocument);
-        }
-      } catch(err) {
-        console.log(err);
-      }
-    });
+      return filtered;
+    }, []);
 
     // for each documents
     documents.forEach(function(doc) {
       
-      //
       let newSources = getSources(doc, emptySvgDeclarationComputed);
 
       // because of prototype on NYT pages
@@ -103,13 +88,9 @@ const crowbar = (function(_deps) {
 
     });
 
-    // creating the popOvers, or download if only one SVG source
-    if (SVGSources.length > 1) {
+    if (SVGSources.length > 0) {
       createPopover(SVGSources);
-    } 
-    else if (SVGSources.length > 0) {
-      download(SVGSources[0]);
-    } 
+    }
     else {
       alert("The Crowbar couldn’t find any SVG nodes.");
     }
@@ -119,7 +100,6 @@ const crowbar = (function(_deps) {
    * 
    */
   function createPopover(sources) {
-    //console.log("createPopover");
 
     cleanup();
 
@@ -193,7 +173,6 @@ const crowbar = (function(_deps) {
    * 
    */
   function cleanup() {
-    //console.log("cleanup");
 
     var crowbarElements = document.querySelectorAll(".svg-crowbar");
 
@@ -206,7 +185,6 @@ const crowbar = (function(_deps) {
    * 
    */
   function getSources(doc, emptySvgDeclarationComputed) {
-    //console.log("getSources");
 
     let svgInfo = [],
         svgs = doc.querySelectorAll("svg"); // returns a static NodeList representing a list of the document's elements that match the specified group of selectors
@@ -255,7 +233,6 @@ const crowbar = (function(_deps) {
    * 
    */
   function download(source) {
-    //console.log("download");
 
     let filename = "untitled";
 
@@ -288,11 +265,11 @@ const crowbar = (function(_deps) {
    * 
    */
   function setInlineStyles(svg, emptySvgDeclarationComputed) {
-    //console.log("setInlineStyles");
 
-    //
+    /**
+     * 
+     */
     function explicitlySetStyle (element) {
-      //console.log("explicitlySetStyle");
 
       let cSSStyleDeclarationComputed = getComputedStyle(element);
       let i, len, key, value;
@@ -307,9 +284,10 @@ const crowbar = (function(_deps) {
       element.setAttribute('style', computedStyleStr);
     }
 
-    //
+    /**
+     * 
+     */
     function traverse(obj) {
-      //console.log("traverse");
 
       let tree = [];
       tree.push(obj);
@@ -337,13 +315,10 @@ const crowbar = (function(_deps) {
       explicitlySetStyle(allElements[i]);
     }
   }
-
+  
   // public domain
   return {
     initialize: _initialize
   }
 
 }(crowbar_deps));
-
-// run
-//crowbar.initialize();
