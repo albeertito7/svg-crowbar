@@ -20,13 +20,12 @@
 
       <h1>SVG Crowbar</h1>
 
-      <p>A bookmarklet that extracts SVG nodes and accompanying styles from an HTML document and enables you to download them as an SVG file—A file which you could open and edit in Adobe Illustrator, for instance.</p>
-      <p>Because SVGs are resolution independent, it’s great for when you want to use web technologies to create documents that are meant to be printed (like, maybe on newsprint).</p>
+      <p>A bookmarklet that extracts SVG nodes and accompanying styles from an HTML document and enables you to download them as an SVG file—A file which you could open and edit in Adobe Illustrator, for instance. Because SVGs are resolution independent, it’s great for when you want to use web technologies to create documents that are meant to be printed (like, maybe on newsprint).</p>
 
       <h3>The Bookmarklet</h3>
 
       <p>
-        <a class="bookmarklet" href="javascript:javascript: (function() { let e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); }()); ">SVG Crowbar</a>
+        <a class="bookmarklet" href="javascript:javascript: (function() { let e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); 'undefined' != typeof crowbar && crowbar.hasOwnProperty('initialize') && crowbar.initialize(); }()); ">SVG Crowbar</a>
         <span>→ Drag this to your browser bookmarks bar.</span>
       <p>
 
