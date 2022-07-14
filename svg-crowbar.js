@@ -42,7 +42,7 @@ const crowbar = (function(_deps) {
     let emptySvg = window.document.createElementNS( _prefix.svg, 'svg' );
     
     // add empty svg element
-    window.document.body.appendChild(emptySvg);
+    //window.document.body.appendChild(emptySvg);
     
     // retrieve the Svg Style
     return getComputedStyle(emptySvg); // window.getComputedStyle
@@ -63,6 +63,8 @@ const crowbar = (function(_deps) {
         iframes = document.querySelectorAll("iframe"), // getting all iframes
         objects = document.querySelectorAll("object"); // getting all objects
     
+    console.log(objects);
+
     // retrieve the Svg Style
     let emptySvgDeclarationComputed = _getEmtpySvgStyle();
 
@@ -344,4 +346,4 @@ const crowbar = (function(_deps) {
 }(crowbar_deps));
 
 // run
-crowbar.initialize();
+//crowbar.initialize();
