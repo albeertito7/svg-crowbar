@@ -50,7 +50,7 @@ const crowbar = (function(_deps) {
     // create element specifying a namespace URI
     // namespaceURI => a string to associate with the element
     let empty_svg = window.document.createElementNS( _prefix.svg, 'svg' );
-    
+
     // retrieve the Svg Style
     return window.getComputedStyle(empty_svg);
   }
@@ -60,40 +60,37 @@ const crowbar = (function(_deps) {
   // depending on the document's type (e.g. HTML, XML, SVG, ...)
 
   /**
-   * 
+   * The JS module bootsraps method.
    */
   function _initialize() {
 
-    let SVGSources = [],
+    let documents = [window.document], 
         iframes = document.querySelectorAll("iframe"),      // getting all iframes
         objects = document.querySelectorAll("object"),      // getting all objects
-        emptySvgDeclarationComputed = _getEmtpySvgStyle();  // retrieve the Svg Style
+        emptySvgDeclarationComputed = _getEmtpySvgStyle();  // retrieve the Svg base Style
 
-    let documents = [ ...iframes, ...objects ].reduce(function(filtered, element) {
+    //get documents
+    //get sources from documents
+    let SVGSources = getSources(window.document, emptySvgDeclarationComputed);
+
+    // retrieving the required documents
+    SVGSources = [...iframes, ...objects].reduce(function(filtered, element) {
       if (element.contentDocument) {
-         filtered.push(element.contentDocument);
+          let newSources = getSources(element.contentDocument, emptySvgDeclarationComputed);
+          filtered = filtered.concat(newSources);
       }
       return filtered;
-    }, []);
+    }, SVGSources);
 
-    // for each documents
-    documents.forEach(function(doc) {
-      
-      let newSources = getSources(doc, emptySvgDeclarationComputed);
+    console.log(SVGSources);
 
-      // because of prototype on NYT pages
-      for (let i = 0; i < newSources.length; i++) {
-        SVGSources.push(newSources[i]);
-      }
-
-    });
-
-    if (SVGSources.length > 0) {
-      createPopover(SVGSources);
-    }
-    else {
+    // halting case
+    if (!SVGSources.length) {
       alert("The Crowbar couldn’t find any SVG nodes.");
     }
+
+    createPopover(SVGSources);
+
   }
 
   /**
@@ -114,20 +111,24 @@ const crowbar = (function(_deps) {
       });
     });
 
-    var buttonsContainer = document.createElement("div");
+    let buttonsContainer = document.createElement("div"); // <div> <!-- main buttons container -->
+    buttonsContainer.setAttribute("class", "svg-crowbar");
     document.body.appendChild(buttonsContainer);
 
-    buttonsContainer.setAttribute("class", "svg-crowbar");
-    buttonsContainer.style["z-index"] = 1e7;
+    // positioning
+    buttonsContainer.classList.add("crowbar-container");
+    buttonsContainer.style["z-index"] = 999999;//1e7;
     buttonsContainer.style["position"] = "absolute";
     buttonsContainer.style["top"] = 0;
     buttonsContainer.style["left"] = 0;
 
-    var background = document.createElement("div");
+    let background = document.createElement("div"); // <div> <!-- opacity background -->
+    background.setAttribute("class", "svg-crowbar");
     document.body.appendChild(background);
 
-    background.setAttribute("class", "svg-crowbar");
+    background.classList.add("crowbar-background");
     background.style["background"] = "rgba(255, 255, 255, 0.7)";
+    background.style["z-index"] = 999998;
     background.style["position"] = "fixed";
     background.style["left"] = 0;
     background.style["top"] = 0;
@@ -135,34 +136,74 @@ const crowbar = (function(_deps) {
     background.style["height"] = "100%";
 
     sources.forEach(function(d, i) {
-      var buttonWrapper = document.createElement("div");
-      buttonsContainer.appendChild(buttonWrapper);
+      
+      let buttonWrapper = document.createElement("div"); // <div>
       buttonWrapper.setAttribute("class", "svg-crowbar");
+      buttonsContainer.appendChild(buttonWrapper);
+
+      buttonWrapper.classList.add("crowbar-btn-wrapper");
       buttonWrapper.style["position"] = "absolute";
       buttonWrapper.style["top"] = (d.top + document.body.scrollTop) + "px";
       buttonWrapper.style["left"] = (document.body.scrollLeft + d.left) + "px";
       buttonWrapper.style["padding"] = "4px";
       buttonWrapper.style["border-radius"] = "3px";
-      buttonWrapper.style["color"] = "white";
-      buttonWrapper.style["text-align"] = "center";
+      buttonWrapper.style.setProperty("color", "white", "important");
+      buttonWrapper.style.setProperty("text-align", "center", "important");
       buttonWrapper.style["font-family"] = "'Helvetica Neue'";
-      buttonWrapper.style["background"] = "rgba(0, 0, 0, 0.8)";
+      buttonWrapper.style.setProperty("background", "rgba(0, 0, 0, 0.8)", "important");
       buttonWrapper.style["box-shadow"] = "0px 4px 18px rgba(0, 0, 0, 0.4)";
       buttonWrapper.style["cursor"] = "move";
       buttonWrapper.textContent =  "SVG #" + i + ": " + (d.id ? "#" + d.id : "") + (d.class ? "." + d.class : "");
 
-      var button = document.createElement("button");
+      let button = document.createElement("button");
       buttonWrapper.appendChild(button);
+
       button.setAttribute("data-source-id", i);
-      button.style["width"] = "150px";
+      button.style["width"] = "130px";
       button.style["font-size"] = "12px";
       button.style["line-height"] = "1.4em";
       button.style["margin"] = "5px 0 0 0";
+      button.style.setProperty("color", "black", "important");
+      button.style["cursor"] = "pointer";
+      button.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
       button.textContent = "Download";
 
-      button.onclick = function(el) {
-        // console.log(el, d, i, sources)
+      let cross = document.createElement("div");
+      cross.setAttribute("class", "crowbar-cross");
+      buttonWrapper.appendChild(cross);
+      cross.style["width"] = "20px";
+      cross.style["font-size"] = "12px";
+      cross.style["line-height"] = "1.4em";
+      cross.style["margin"] = "5px 0 0 0";
+      cross.style.setProperty("color", "black", "important");
+      cross.style["cursor"] = "pointer";
+      cross.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
+      cross.textContent = "X";
+
+      let show = document.createElement("div");
+      show.setAttribute("class", "crowbar-show");
+      buttonWrapper.appendChild(show);
+      show.style["width"] = "40px";
+      show.style["font-size"] = "12px";
+      show.style["line-height"] = "1.4em";
+      show.style["margin"] = "5px 0 0 0";
+      show.style.setProperty("color", "black", "important");
+      show.style["cursor"] = "pointer";
+      show.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
+      show.textContent = "Show";
+
+      _dragElement(buttonWrapper);
+
+      button.onclick = function() {
         download(d);
+      };
+
+      cross.onclick = function() {
+        $(this).parent().remove();
+      };
+
+      show.onclick = function () {
+        console.log(d.source);
       };
 
     });
@@ -170,35 +211,35 @@ const crowbar = (function(_deps) {
   }
 
   /**
-   * 
+   * Removes the DOM .svg-crowbar already created elements, so that
+   * a new set can be raised.
    */
   function cleanup() {
 
-    var crowbarElements = document.querySelectorAll(".svg-crowbar");
+    let crowbarElements = document.querySelectorAll(".svg-crowbar");
 
-    [].forEach.call(crowbarElements, function(el) {
-      el.parentNode.removeChild(el);
+    [...crowbarElements].forEach((element) => {
+      element.parentNode.removeChild(element);
     });
   }
 
   /**
    * 
    */
-  function getSources(doc, emptySvgDeclarationComputed) {
+  function getSources(document, emptySvgDeclarationComputed) {
 
     let svgInfo = [],
-        svgs = doc.querySelectorAll("svg"); // returns a static NodeList representing a list of the document's elements that match the specified group of selectors
+        svgs = document.querySelectorAll("svg"); // returns a static NodeList representing a list of the document's elements that match the specified group of selectors
 
-    // for each SVG of the document (doc)
-    [].forEach.call(svgs, function (svg) {
+    [...svgs].forEach((svg) => {
 
       svg.setAttribute("version", "1.1");
-
+      
       // removing attributes so they aren't doubled up
       svg.removeAttribute("xmlns");
       svg.removeAttribute("xlink");
 
-      // These are needed for the svg
+      // these are needed for the svg
       if (!svg.hasAttributeNS(_prefix.xmlns, "xmlns")) {
         svg.setAttributeNS(_prefix.xmlns, "xmlns", _prefix.svg);
       }
@@ -207,18 +248,19 @@ const crowbar = (function(_deps) {
         svg.setAttributeNS(_prefix.xmlns, "xmlns:xlink", _prefix.xlink);
       }
 
+      //
       setInlineStyles(svg, emptySvgDeclarationComputed);
 
-      let source = (new XMLSerializer()).serializeToString(svg);
-      let rect = svg.getBoundingClientRect();
+      let source = (new XMLSerializer()).serializeToString(svg),
+          rect = svg.getBoundingClientRect(); // returns a DOMRect object providing information about the size of an element and its position relative to the viewport
 
       svgInfo.push({
         top: rect.top,
         left: rect.left,
         width: rect.width,
         height: rect.height,
-        class: svg.getAttribute("class"),
         id: svg.getAttribute("id"),
+        class: svg.getAttribute("class"),
         name: svg.getAttribute("name"),
         childElementCount: svg.childElementCount,
         source: [ _doctype + source ]
@@ -227,10 +269,11 @@ const crowbar = (function(_deps) {
     });
 
     return svgInfo;
+        
   }
 
   /**
-   * 
+   * Downloads a specific svg source file.
    */
   function download(source) {
 
@@ -315,10 +358,53 @@ const crowbar = (function(_deps) {
       explicitlySetStyle(allElements[i]);
     }
   }
+
+  function _dragElement(elmnt) {
+    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    /*if (document.getElementById(elmnt.id + "header")) {
+      // if present, the header is where you move the DIV from:
+      document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    } else {*/
+      // otherwise, move the DIV from anywhere inside the DIV:
+      elmnt.onmousedown = dragMouseDown;
+    //}
   
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // get the mouse cursor position at startup:
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      // call a function whenever the cursor moves:
+      document.onmousemove = elementDrag;
+    }
+  
+    function elementDrag(e) {
+      e = e || window.event;
+      e.preventDefault();
+      // calculate the new cursor position:
+      pos1 = pos3 - e.clientX;
+      pos2 = pos4 - e.clientY;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      // set the element's new position:
+      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
+  
+    function closeDragElement() {
+      // stop moving when mouse button is released:
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
+  }
+
   // public domain
   return {
     initialize: _initialize
   }
 
 }(crowbar_deps));
+
+crowbar.initialize();
