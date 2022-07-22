@@ -187,11 +187,11 @@ const crowbar = (function(_deps) {
       e.target.parentElement.parentElement.style["display"] = "none";
     };
 
-
     let showDivBody = document.createElement("div");
     showDivBody.setAttribute("class", "showDiv-body");
+    showDivBody.style["padding"] = "5px";
     showDiv.appendChild(showDivBody);
-
+    
     // positioning
     showDiv.classList.add("crowbar-show-div");
     showDiv.style["z-index"] = 9999999;//1e7;
@@ -199,6 +199,7 @@ const crowbar = (function(_deps) {
     showDiv.style["width"] = "300px";
     showDiv.style["min-width"] = "300px";
     showDiv.style["min-height"] = "300px";
+    showDiv.style["cursor"] = "move";
     showDiv.style["border"] = "4px solid black";
     //showDiv.style["background"] = "white";
     showDiv.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
