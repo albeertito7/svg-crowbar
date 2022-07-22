@@ -89,16 +89,34 @@ const crowbar = (function(_deps) {
       alert("The Crowbar couldn’t find any SVG nodes.");
     }
 
-    createPopover(SVGSources);
+    _createPopover(SVGSources);
+    //_createShowDiv();
 
+  }
+
+  function _createShowDiv() {
+
+    let showDiv = document.createElement("div"); // <div> <!-- main container -->
+    showDiv.setAttribute("class", "svg-crowbar");
+    showDiv.setAttribute("id", "showDiv");
+    document.body.appendChild(document);
+
+    // positioning
+    showDiv.classList.add("crowbar-show-div");
+    showDiv.style["z-index"] = 9999999;//1e7;
+    showDiv.style["position"] = "absolute";
+    showDiv.style["width"] = "400px";
+    showDiv.style["top"] = 0;
+    showDiv.style["left"] = 0;
+    showDiv.style["display"] = "none";
   }
 
   /**
    * 
    */
-  function createPopover(sources) {
+  function _createPopover(sources) {
 
-    cleanup();
+    _cleanup();
 
     sources.forEach(function(s1) {
       sources.forEach(function(s2) {
@@ -111,7 +129,7 @@ const crowbar = (function(_deps) {
       });
     });
 
-    let buttonsContainer = document.createElement("div"); // <div> <!-- main buttons container -->
+    let buttonsContainer = document.createElement("div"); // <div> <!-- main container -->
     buttonsContainer.setAttribute("class", "svg-crowbar");
     document.body.appendChild(buttonsContainer);
 
@@ -135,16 +153,69 @@ const crowbar = (function(_deps) {
     background.style["width"] = "100%";
     background.style["height"] = "100%";
 
+    let showDiv = document.createElement("div"); // <div> <!-- main container -->
+    showDiv.setAttribute("class", "svg-crowbar");
+    showDiv.setAttribute("id", "showDiv");
+    document.body.appendChild(showDiv);
+
+    let showDivHeader = document.createElement("div");
+    showDivHeader.setAttribute("class", "showDiv-header");
+    showDiv.appendChild(showDivHeader);
+    showDivHeader.style["background"] = "black";
+    showDivHeader.style["color"] = "white";
+    showDivHeader.style["font-size"] = "14px";
+    showDivHeader.style["text-align"] = "center";
+
+    let showText = document.createTextNode("SVG Visualizer");
+    let showCrossBtn = document.createElement("button");
+    showCrossBtn.setAttribute("class", "crowbar-show-cross");
+    showCrossBtn.style["color"] = "white";
+    showCrossBtn.style["background"] = "transparent";
+    showCrossBtn.style["font-weight"] = "bold";
+    showCrossBtn.style["border"] = "none";
+    showCrossBtn.style["outline"] = "none";
+    showCrossBtn.style["float"] = "right";
+    showCrossBtn.style["margin"] = "0px";
+    showCrossBtn.style["cursor"] = "pointer";
+    showCrossBtn.style["text-align"] = "center";
+    showCrossBtn.innerHTML = "&#10006;";
+
+    showDivHeader.appendChild(showText);
+    showDivHeader.appendChild(showCrossBtn);
+
+    showCrossBtn.onclick = function(e) {
+      e.target.parentElement.parentElement.style["display"] = "none";
+    };
+
+
+    let showDivBody = document.createElement("div");
+    showDivBody.setAttribute("class", "showDiv-body");
+    showDiv.appendChild(showDivBody);
+
+    // positioning
+    showDiv.classList.add("crowbar-show-div");
+    showDiv.style["z-index"] = 9999999;//1e7;
+    showDiv.style["position"] = "absolute";
+    showDiv.style["width"] = "300px";
+    showDiv.style["min-width"] = "300px";
+    showDiv.style["min-height"] = "300px";
+    showDiv.style["border"] = "4px solid black";
+    //showDiv.style["background"] = "white";
+    showDiv.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
+    showDiv.style["top"] = 0;
+    showDiv.style["left"] = 0;
+    showDiv.style["display"] = "none";
+    _dragElement(showDiv);
+
     sources.forEach(function(d, i) {
       
-      let buttonWrapper = document.createElement("div"); // <div>
+      let buttonWrapper = document.createElement("div"); // <div> <!-- action buttons wrapper -->
       buttonWrapper.setAttribute("class", "svg-crowbar");
       buttonsContainer.appendChild(buttonWrapper);
-
       buttonWrapper.classList.add("crowbar-btn-wrapper");
       buttonWrapper.style["position"] = "absolute";
-      buttonWrapper.style["top"] = (d.top + document.body.scrollTop) + "px";
-      buttonWrapper.style["left"] = (document.body.scrollLeft + d.left) + "px";
+      buttonWrapper.style["top"] = (d.top) + "px";
+      buttonWrapper.style["left"] = (d.left) + "px";
       buttonWrapper.style["padding"] = "4px";
       buttonWrapper.style["border-radius"] = "3px";
       buttonWrapper.style.setProperty("color", "white", "important");
@@ -155,9 +226,9 @@ const crowbar = (function(_deps) {
       buttonWrapper.style["cursor"] = "move";
       buttonWrapper.textContent =  "SVG #" + i + ": " + (d.id ? "#" + d.id : "") + (d.class ? "." + d.class : "");
 
-      let button = document.createElement("button");
+      let button = document.createElement("button"); // <button>
+      button.setAttribute("class", "crowbar-download");
       buttonWrapper.appendChild(button);
-
       button.setAttribute("data-source-id", i);
       button.style["width"] = "130px";
       button.style["font-size"] = "12px";
@@ -168,7 +239,7 @@ const crowbar = (function(_deps) {
       button.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
       button.textContent = "Download";
 
-      let cross = document.createElement("div");
+      let cross = document.createElement("button"); // <button>
       cross.setAttribute("class", "crowbar-cross");
       buttonWrapper.appendChild(cross);
       cross.style["width"] = "20px";
@@ -180,7 +251,7 @@ const crowbar = (function(_deps) {
       cross.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
       cross.textContent = "X";
 
-      let show = document.createElement("div");
+      let show = document.createElement("button"); // <button>
       show.setAttribute("class", "crowbar-show");
       buttonWrapper.appendChild(show);
       show.style["width"] = "40px";
@@ -195,15 +266,20 @@ const crowbar = (function(_deps) {
       _dragElement(buttonWrapper);
 
       button.onclick = function() {
-        download(d);
+        _download(d);
       };
 
-      cross.onclick = function() {
-        $(this).parent().remove();
+      cross.onclick = function(e) {
+        e.target.parentElement.remove();
       };
 
       show.onclick = function () {
-        console.log(d.source);
+        let showDiv = document.querySelector("#showDiv");
+        let showDivBody = document.querySelector("#showDiv > .showDiv-body");
+        showDivBody.innerHTML = "";
+        showDivBody.appendChild(d.element);
+        showDiv.style["display"] = "block";
+        //console.log(d.element);
       };
 
     });
@@ -214,12 +290,12 @@ const crowbar = (function(_deps) {
    * Removes the DOM .svg-crowbar already created elements, so that
    * a new set can be raised.
    */
-  function cleanup() {
+  function _cleanup() {
 
     let crowbarElements = document.querySelectorAll(".svg-crowbar");
 
     [...crowbarElements].forEach((element) => {
-      element.parentNode.removeChild(element);
+      element.remove();
     });
   }
 
@@ -248,12 +324,11 @@ const crowbar = (function(_deps) {
         svg.setAttributeNS(_prefix.xmlns, "xmlns:xlink", _prefix.xlink);
       }
 
-      //
       setInlineStyles(svg, emptySvgDeclarationComputed);
 
-      let source = (new XMLSerializer()).serializeToString(svg),
+      let source = (new XMLSerializer()).serializeToString(svg);
           rect = svg.getBoundingClientRect(); // returns a DOMRect object providing information about the size of an element and its position relative to the viewport
-
+      
       svgInfo.push({
         top: rect.top,
         left: rect.left,
@@ -263,7 +338,8 @@ const crowbar = (function(_deps) {
         class: svg.getAttribute("class"),
         name: svg.getAttribute("name"),
         childElementCount: svg.childElementCount,
-        source: [ _doctype + source ]
+        source: [ _doctype + source ],
+        element: svg.cloneNode(true)
       });
 
     });
@@ -275,7 +351,7 @@ const crowbar = (function(_deps) {
   /**
    * Downloads a specific svg source file.
    */
-  function download(source) {
+  function _download(source) {
 
     let filename = "untitled";
 
@@ -359,42 +435,46 @@ const crowbar = (function(_deps) {
     }
   }
 
-  function _dragElement(elmnt) {
-    var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-    /*if (document.getElementById(elmnt.id + "header")) {
-      // if present, the header is where you move the DIV from:
-      document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-    } else {*/
-      // otherwise, move the DIV from anywhere inside the DIV:
-      elmnt.onmousedown = dragMouseDown;
-    //}
+  /**
+   * Enables dragging for the element specified.
+   */
+  function _dragElement(element) {
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+    // move the DIV from anywhere inside it
+    element.onmousedown = dragMouseDown;
   
     function dragMouseDown(e) {
       e = e || window.event;
       e.preventDefault();
-      // get the mouse cursor position at startup:
+
+      // get the mouse cursor position at startup
       pos3 = e.clientX;
       pos4 = e.clientY;
+
       document.onmouseup = closeDragElement;
-      // call a function whenever the cursor moves:
+      
+      // call a function whenever the cursor moves
       document.onmousemove = elementDrag;
     }
   
     function elementDrag(e) {
       e = e || window.event;
       e.preventDefault();
-      // calculate the new cursor position:
+
+      // calculate the new cursor position
       pos1 = pos3 - e.clientX;
       pos2 = pos4 - e.clientY;
       pos3 = e.clientX;
       pos4 = e.clientY;
-      // set the element's new position:
-      elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-      elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+      // set the element's new position
+      element.style.top = (element.offsetTop - pos2) + "px";
+      element.style.left = (element.offsetLeft - pos1) + "px";
     }
   
     function closeDragElement() {
-      // stop moving when mouse button is released:
+      // stop moving when mouse button is released
       document.onmouseup = null;
       document.onmousemove = null;
     }
