@@ -3,15 +3,12 @@
  * used to define objects and specify the variables and the functions that can be accessed from outside the scope of the function.
  * expose certain properties and function s as public and can also restrict the scope of some within the object itself, making them private.
  *
- * 
  * NodeList: collections of nodes, usually returned by properties such as Node.childNodes and methods such as document.querySelectorAll().
  * 
  * Node: is an abstract base class upon which many other DOM API objects are based, thus letting those object types to be used similary and often interchangeably.
  * as an abstract class, there is no such thing as a plain Node object.
- * all objects that implement Node functionality are based on one of its sublaclasses.
+ * all objects that implement Node functionality are based on one of its subclasses.
  * most notable are Document, Element, and DocumentFragment.
- * 
- * 
  */
 
 /**
@@ -21,14 +18,14 @@
  * @author        albeertito7 <albertperezdatsira@gmail.com>
  * @author_uri    https://albeertito7.github.io
  * @license       MIT
- * @description
+ * @description   SVG Crowbar
  */
 
 // Js module dependencies
 const crowbar_deps = {
   _window: window,
   _document: document
-}
+};
 
 const crowbar = (function(_deps) {
   
@@ -46,7 +43,6 @@ const crowbar = (function(_deps) {
    * To get the base SVG Empty Styles from the page browser.
    */
   function _getEmtpySvgStyle() {
-    
     // create element specifying a namespace URI
     // namespaceURI => a string to associate with the element
     let empty_svg = window.document.createElementNS( _prefix.svg, 'svg' );
@@ -63,8 +59,7 @@ const crowbar = (function(_deps) {
    * The JS module bootsraps method.
    */
   function _initialize() {
-
-    let documents = [window.document], 
+    let documents = [window.document],
         iframes = document.querySelectorAll("iframe"),      // getting all iframes
         objects = document.querySelectorAll("object"),      // getting all objects
         emptySvgDeclarationComputed = _getEmtpySvgStyle();  // retrieve the Svg base Style
@@ -82,33 +77,18 @@ const crowbar = (function(_deps) {
       return filtered;
     }, SVGSources);
 
-    console.log(SVGSources);
-
     // halting case
     if (!SVGSources.length) {
-      alert("The Crowbar couldn’t find any SVG nodes.");
+      window.alert("The SVG Crowbar couldn’t find any SVG nodes.");
+      return;
     }
 
+    console.log(SVGSources);
     _createPopover(SVGSources);
-    //_createShowDiv();
-
   }
 
   function _createShowDiv() {
-
-    let showDiv = document.createElement("div"); // <div> <!-- main container -->
-    showDiv.setAttribute("class", "svg-crowbar");
-    showDiv.setAttribute("id", "showDiv");
-    document.body.appendChild(document);
-
-    // positioning
-    showDiv.classList.add("crowbar-show-div");
-    showDiv.style["z-index"] = 9999999;//1e7;
-    showDiv.style["position"] = "absolute";
-    showDiv.style["width"] = "400px";
-    showDiv.style["top"] = 0;
-    showDiv.style["left"] = 0;
-    showDiv.style["display"] = "none";
+    
   }
 
   /**
@@ -158,7 +138,7 @@ const crowbar = (function(_deps) {
     showDiv.setAttribute("id", "showDiv");
     document.body.appendChild(showDiv);
 
-    let showDivHeader = document.createElement("div");
+    let showDivHeader = document.createElement("div"); // <div> <!-- header -->
     showDivHeader.setAttribute("class", "showDiv-header");
     showDiv.appendChild(showDivHeader);
     showDivHeader.style["background"] = "black";
@@ -166,7 +146,7 @@ const crowbar = (function(_deps) {
     showDivHeader.style["font-size"] = "14px";
     showDivHeader.style["text-align"] = "center";
 
-    let showText = document.createTextNode("SVG Visualizer");
+    let showText = document.createTextNode("SVG Visualizer"); // <div> <!-- SVG Visualizer container -->
     let showCrossBtn = document.createElement("button");
     showCrossBtn.setAttribute("class", "crowbar-show-cross");
     showCrossBtn.style["color"] = "white";
@@ -178,7 +158,7 @@ const crowbar = (function(_deps) {
     showCrossBtn.style["margin"] = "0px";
     showCrossBtn.style["cursor"] = "pointer";
     showCrossBtn.style["text-align"] = "center";
-    showCrossBtn.innerHTML = "&#10006;";
+    showCrossBtn.innerHTML = "&#10006;"; // X
 
     showDivHeader.appendChild(showText);
     showDivHeader.appendChild(showCrossBtn);
@@ -187,7 +167,7 @@ const crowbar = (function(_deps) {
       e.target.parentElement.parentElement.style["display"] = "none";
     };
 
-    let showDivBody = document.createElement("div");
+    let showDivBody = document.createElement("div"); // <div> <!-- Visualizer body container -->
     showDivBody.setAttribute("class", "showDiv-body");
     showDivBody.style["padding"] = "5px";
     showDiv.appendChild(showDivBody);
@@ -206,6 +186,7 @@ const crowbar = (function(_deps) {
     showDiv.style["top"] = 0;
     showDiv.style["left"] = 0;
     showDiv.style["display"] = "none";
+
     _dragElement(showDiv);
 
     sources.forEach(function(d, i) {
@@ -225,7 +206,31 @@ const crowbar = (function(_deps) {
       buttonWrapper.style.setProperty("background", "rgba(0, 0, 0, 0.8)", "important");
       buttonWrapper.style["box-shadow"] = "0px 4px 18px rgba(0, 0, 0, 0.4)";
       buttonWrapper.style["cursor"] = "move";
-      buttonWrapper.textContent =  "SVG #" + i + ": " + (d.id ? "#" + d.id : "") + (d.class ? "." + d.class : "");
+      //buttonWrapper.textContent =  "SVG #" + i + ": " + (d.id ? "#" + d.id : "") + (d.class ? "." + d.class : "");
+
+      let buttonHeader = document.createElement("div"); // <div> <!-- button container header -->
+      buttonHeader.setAttribute("class", "showDiv-header");
+      buttonWrapper.appendChild(buttonHeader);
+      buttonHeader.style["color"] = "white";
+      buttonHeader.style["font-size"] = "14px";
+      buttonHeader.style["text-align"] = "left";
+
+      let buttonHeaderText = document.createTextNode("SVG #" + i + ": " + (d.id ? "#" + d.id : "") + (d.class ? "." + d.class : "")); // <div> <!-- Header text -->
+      let buttonCrossBtn = document.createElement("button");
+      buttonCrossBtn.setAttribute("class", "crowbar-show-cross");
+      buttonCrossBtn.style["color"] = "white";
+      buttonCrossBtn.style["background"] = "transparent";
+      buttonCrossBtn.style["font-weight"] = "bold";
+      buttonCrossBtn.style["border"] = "none";
+      buttonCrossBtn.style["outline"] = "none";
+      buttonCrossBtn.style["float"] = "right";
+      buttonCrossBtn.style["margin"] = "0px";
+      buttonCrossBtn.style["cursor"] = "pointer";
+      buttonCrossBtn.style["text-align"] = "center";
+      buttonCrossBtn.innerHTML = "&#10006;"; // X
+
+      buttonHeader.appendChild(buttonHeaderText);
+      buttonHeader.appendChild(buttonCrossBtn);
 
       let button = document.createElement("button"); // <button>
       button.setAttribute("class", "crowbar-download");
@@ -243,14 +248,14 @@ const crowbar = (function(_deps) {
       let cross = document.createElement("button"); // <button>
       cross.setAttribute("class", "crowbar-cross");
       buttonWrapper.appendChild(cross);
-      cross.style["width"] = "20px";
-      cross.style["font-size"] = "12px";
-      cross.style["line-height"] = "1.4em";
+      //cross.style["width"] = "20px";  
+      cross.style["font-size"] = "14px";
       cross.style["margin"] = "5px 0 0 0";
       cross.style.setProperty("color", "black", "important");
       cross.style["cursor"] = "pointer";
+      cross.style["padding"] = "5px";
       cross.style.setProperty("background", "rgba(255, 255, 255, 0.9)", "important");
-      cross.textContent = "X";
+      cross.innerHTML = "&#10006;"; // X
 
       let show = document.createElement("button"); // <button>
       show.setAttribute("class", "crowbar-show");
@@ -379,6 +384,7 @@ const crowbar = (function(_deps) {
     setTimeout(function() {
       window.URL.revokeObjectURL(url);
     }, 10);
+
   }
 
   /**
@@ -434,6 +440,7 @@ const crowbar = (function(_deps) {
     while (i--) {
       explicitlySetStyle(allElements[i]);
     }
+
   }
 
   /**
