@@ -1,0 +1,14 @@
+{
+  "name": "svg-crowbar",
+  "version": "1.0.0",
+  "repository": "https://github.com/albeertito7/svg-crowbar.git",
+  "author": "albert <albertperezdatsira@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "8.22.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "fix-lint": "eslint --fix ."
+  }
+}
