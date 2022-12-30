@@ -1,35 +1,27 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
   <head>
     <meta charset='utf-8'>
     <meta name="author" content="Albert Pérez Datsira">
     <meta name="description" content="New version of the SVG Crowbar project from The New York Times (https://github.com/nytimes/svg-crowbar)." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--<base href="https://albeerito7.github.io/" target="_blank">-->
     <title>SVG Crowbar</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <style>#forkongithub a{background:#000;color:#fff;text-decoration:none;font-family:arial,sans-serif;text-align:center;font-weight:bold;padding:5px 40px;font-size:1rem;line-height:2rem;position:relative;transition:0.5s;}#forkongithub a:hover{background:#c11;color:#fff;}#forkongithub a::before,#forkongithub a::after{content:"";width:100%;display:block;position:absolute;top:1px;left:0;height:1px;background:#fff;}#forkongithub a::after{bottom:1px;top:auto;}@media screen and (min-width:800px){#forkongithub{position:fixed;display:block;top:0;right:0;width:200px;overflow:hidden;height:200px;z-index:9999;}#forkongithub a{width:200px;position:absolute;top:60px;right:-60px;transform:rotate(45deg);-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);box-shadow:4px 4px 10px rgba(0,0,0,0.8);}}</style>
-    <script type="text/javascript" src="js/setup.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles.min.css">
+    <script type="text/javascript" src="js/setup.min.js"></script>
   </head>
 
   <body>
     <main>
-
-      <!-- Fork me on Github badge -->
-      <!--<a href="https://github.com/albeertito7/svg-crowbar"><img style="position: absolute; top: 0; right: 0; border: 0; -moz-user-select: none; -webkit-user-select: none; user-select: none;" loading="lazy" width="149" height="149" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_darkblue_121621.png?resize=149%2C149" class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>-->
+      <!-- Fork me on GitHub badge -->
       <span id="forkongithub">
-        <a href="https://github.com/albeertito7/svg-crowbar" alt="Fork me on Github">Fork me on GitHub</a>
-    </span>
+        <a href="https://github.com/albeertito7/svg-crowbar" title="Fork me on Github">Fork me on GitHub</a>
+      </span>
 
       <h1>SVG Crowbar</h1>
-
       <p>A bookmarklet that extracts SVG nodes and accompanying styles from an HTML document and enables you to download them as an SVG file—A file which you could open and edit in Adobe Illustrator, for instance. Because SVGs are resolution independent, it’s great for when you want to use web technologies to create documents that are meant to be printed (like, maybe on newsprint).</p>
-
       <h3>The Bookmarklet</h3>
-
       <p>
-        <a class="bookmarklet" href="javascript:javascript: (function() { let e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); 'undefined' != typeof crowbar && crowbar.hasOwnProperty('initialize') && crowbar.initialize(); }()); ">SVG Crowbar</a>
+        <a class="bookmarklet" href="javascript:javascript: (function() { let e = document.createElement('script'); e.setAttribute('src', 'https://albeertito7.github.io/svg-crowbar/svg-crowbar.min.js'); e.setAttribute('class', 'svg-crowbar'); document.body.appendChild(e); 'undefined' != typeof crowbar && crowbar.hasOwnProperty('initialize') && crowbar.initialize(); }()); ">SVG Crowbar</a>
         <span>→ Drag this to your browser bookmarks bar.</span>
       <p>
 
@@ -37,27 +29,22 @@
       <blockquote><p class="note">(You can click on the link instead to test it on this page immediately.)</p></blockquote>
 
       <h3>A Sample SVG for testing purposes.</h3>
-
       <div id="svg-sample">
         <object data="assets/sample-logo.svg" width="300" height="300"></object>
       </div>
 
       <h3>Notes</h3>
-
       <p>Pixels will map to points when opening in Illustrator.</p>
       <p>Dimensions of the document will be the same as the dimensions of your SVG element.</p>
       <p>All colors are RGB, which is not ideal for print documents, but CMYK is not supported in SVG 1.1.</p>
       <p>Some styles won’t propogate down if they depend on markup outside of the svg element. For instance, if you use CSS that targets an SVG path element by an id on the div surrounding the SVG ("#map svg path") then those styles won’t show up in the resulting file. </p>
 
       <!--<h3>Gotchas</h3>-->
-
       <!--<p>It only works in Chrome.</p>-->
       <!--<p>Currently the https version of the script is being served from raw.github.com, which might break in the future. If the script stops running on https pages, check back here—you might have to re-install the bookmarklet at that time.</p>-->
       <!--<p>Descendent ">" CSS selectors will crash Adobe Illustrator, therefore those styles are stripped out. Be warned.</p>-->
       <!--<p>Adobe Illustrator also chokes on fonts that it doesn’t recognize. Font-family assigments like “sans-serif” (or if you're using webfonts like “nyt-franklin”) will cause Illustrator to give this error when opening the file: “The operation cannot complete because of an unknown error. [CANT]”. This is fixed in Illustrator version 17.1. Other SVG viewers are pretty okay with them though.</p>-->
       <!--<p>Some styles won’t propogate down if they depend on markup outside of the svg element. For instance, if you use CSS that targets an SVG path element by an id on the div surrounding the SVG ("#map svg path") then those styles won’t show up in the resulting file. </p>-->
-    
     </main>
   </body>
-
 </html>
