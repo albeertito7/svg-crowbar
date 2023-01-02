@@ -51,6 +51,10 @@ blockquote {
     margin: 40px 0px 0px;
 }
 
+body > main {
+    padding: 5%;
+}
+
 /* Fork on Github */
 #forkongithub a {
     background: #000;
@@ -100,7 +104,7 @@ blockquote {
         z-index: 9999;
     }
     #forkongithub a {
-        width: 100%;
+        width: 200px;
         position: absolute;
         top: 60px;
         right: -60px;
